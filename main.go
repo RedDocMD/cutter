@@ -47,7 +47,7 @@ func main() {
 		languageNames[i] = lang.Name
 	}
 
-	var chosenLangIdx uint
+	var chosenLangIdx int
 	selectPrompt := &survey.Select{
 		Message: "Choose template language",
 		Options: languageNames,
@@ -73,10 +73,12 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
-	names := strings.Split(nameStr, " ")
+	names := strings.Split(strings.TrimSpace(nameStr), " ")
 
+	ext := chosenLang.Ext()
 	for _, name := range names {
-		fullPath := filepath.Join(pwd, name)
+		nameWithExt := name + ext
+		fullPath := filepath.Join(pwd, nameWithExt)
 		chosenLang.CreateFile(fullPath)
 	}
 }
