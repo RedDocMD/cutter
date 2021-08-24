@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/RedDocMD/cutter/conf"
 	"github.com/spf13/viper"
 )
@@ -32,5 +35,34 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%#v\n", conf)
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Failed to find present working directory:", err)
+		os.Exit(1)
+	}
+
+	languageNames := make([]string, len(conf.Languages))
+	for i, lang := range conf.Languages {
+		languageNames[i] = lang.Name
+	}
+
+	var chosenLangIdx uint
+	selectPrompt := &survey.Select{
+		Message: "Choose template language",
+		Options: languageNames,
+	}
+	survey.AskOne(selectPrompt, &chosenLangIdx)
+	chosenLang := conf.Languages[chosenLangIdx]
+
+	nameStr := ""
+	namePrompt := &survey.Input{
+		Message: "Enter filenames to create (space-separated)",
+	}
+	survey.AskOne(namePrompt, &nameStr)
+	names := strings.Split(nameStr, " ")
+
+	for _, name := range names {
+		fullPath := filepath.Join(pwd, name)
+		chosenLang.CreateFile(fullPath)
+	}
 }
