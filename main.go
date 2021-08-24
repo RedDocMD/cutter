@@ -51,6 +51,7 @@ func main() {
 	selectPrompt := &survey.Select{
 		Message: "Choose template language",
 		Options: languageNames,
+		Default: conf.Default,
 	}
 	if err = survey.AskOne(selectPrompt, &chosenLangIdx); err == terminal.InterruptErr {
 		fmt.Println("Interrupted")
