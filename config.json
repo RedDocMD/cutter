@@ -1,0 +1,21 @@
+{
+    "languages": [
+        {
+            "name": "C++",
+            "path": "/home/dknite/work/comp/comp2.cpp"
+        },
+        {
+            "name": "Go",
+            "path": "/home/dknite/work/comp/comp3.go"
+        },
+        {
+            "name": "Rust",
+            "path": "/home/dknite/work/comp/comp.rs"
+        },
+        {
+            "name": "Java",
+            "path": "/home/dknite/work/comp/comp.java"
+        }
+    ],
+    "default": "Rust"
+}
