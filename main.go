@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/AlecAivazis/survey/v2/terminal"
 	"github.com/RedDocMD/cutter/conf"
 	"github.com/spf13/viper"
 )
@@ -51,14 +52,26 @@ func main() {
 		Message: "Choose template language",
 		Options: languageNames,
 	}
-	survey.AskOne(selectPrompt, &chosenLangIdx)
+	if err = survey.AskOne(selectPrompt, &chosenLangIdx); err == terminal.InterruptErr {
+		fmt.Println("Interrupted")
+		os.Exit(0)
+	} else if err != nil {
+		fmt.Fprintln(os.Stderr, "Error:", err)
+		os.Exit(1)
+	}
 	chosenLang := conf.Languages[chosenLangIdx]
 
 	nameStr := ""
 	namePrompt := &survey.Input{
 		Message: "Enter filenames to create (space-separated)",
 	}
-	survey.AskOne(namePrompt, &nameStr)
+	if err = survey.AskOne(namePrompt, &nameStr); err == terminal.InterruptErr {
+		fmt.Println("Interrupted")
+		os.Exit(0)
+	} else if err != nil {
+		fmt.Fprintln(os.Stderr, "Error:", err)
+		os.Exit(1)
+	}
 	names := strings.Split(nameStr, " ")
 
 	for _, name := range names {
